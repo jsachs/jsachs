@@ -4,7 +4,7 @@ Dependencies:
 - Python 2.7
 - itsdangerous
 - Flask-HTTPAuth
-- nose
+- PassLib
 
 Testing:
 - to run my included unit tests, run `python tests.py`
