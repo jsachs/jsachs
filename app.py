@@ -34,7 +34,7 @@ def verify_password(username_or_token, password):
 # API endpoints
 @app.route('/')
 def index():
-    # no authentication
+    
     return jsonify({'message': "Hello World"})
 
 @app.route('/user', methods = ['GET'])
