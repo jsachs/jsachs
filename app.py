@@ -34,7 +34,6 @@ def verify_password(username_or_token, password):
 # API endpoints
 @app.route('/')
 def index():
-    
     return jsonify({'message': "Hello World"})
 
 @app.route('/user', methods = ['GET'])
@@ -118,9 +117,9 @@ class User(db.Model):
         s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
         return s.dumps({ 'id': self.id })
 
-    def invalidate_auth_token(self):
-        del(s)
-        return
+    def invalidate_auth_token(self, expiration = 1):
+        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
+        return s.dumps({ 'id': self.id })
 
     @staticmethod
     def verify_auth_token(token):
