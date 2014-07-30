@@ -1,24 +1,35 @@
 #!jsachs/bin/python
 import os
-import flaskr
 import unittest
-import tempfile
 
-class FlaskrTestCase(unittest.TestCase):
+from app import app, db, User, basedir
+
+class TestCase(unittest.TestCase):
 
     def setUp(self):
-        self.db_fd, flaskr.app.config['DATABASE'] = tempfile.mkstemp()
-        flaskr.app.config['TESTING'] = True
-        self.app = flaskr.app.test_client()
-        flaskr.init_db()
+        app.config['TESTING']
+        app.config['CSRF_ENABLED'] = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'test.db')
+        self.app = app.test_client()
+        db.create_all()
 
     def tearDown(self):
-        os.close(self.db_fd)
-        os.unlink(flaskr.app.config['DATABASE'])
+        db.session.remove()
+        db.drop_all()
 
-    def test_empty_db(self):
+    def test_index(self):
         rv = self.app.get('/')
-        assert 'No entries here so far' in rv.data
+        print rv
+
+    def test_add_user(self):
+        rv = self.add_user("jsachs", "12345", "jsachs@epic.com")
+        print rv
+
+    def add_user(self, username, password, data):
+        return self.app.post('/user', data=dict(
+            username=username,
+            password=password),
+            follow_redirects=True)
 
 if __name__ == '__main__':
     unittest.main()
